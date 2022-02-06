@@ -7,11 +7,15 @@ def read_json(file_name: str) -> list:
     return data
 
 
+def get_element_tags(element: dict) -> list:
+    return list(element.keys())
+
+
 def do_html(data: list) -> None:
     result = ''
     for element in data:
-        result += "<h1>" + element['title'] + "</h1>"
-        result += "<p>" + element['body'] + "</p>"
+        for tag in get_element_tags(element):
+            result += "<{}>".format(tag) + element[tag] + "</{}>".format(tag)
 
     print_html(result)
     return None
@@ -25,7 +29,7 @@ def print_html(result: str) -> None:
 
 
 if __name__ == '__main__':
-    data = read_json('source1.json')
-    #print(data)
-    #print(type(data))
+    data = read_json('source2.json')
+    # print(data)
+    # print(type(data))
     do_html(data)
