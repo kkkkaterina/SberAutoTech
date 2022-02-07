@@ -11,18 +11,20 @@ def get_element_tags(element: dict) -> list:
     return list(element.keys())
 
 
-def do_html(data: list) -> None:
+def do_html(data: list) -> str:
     # принимаю, что в json только list приходит и не может быть dict
     # коммент от HR: по 3 задаче: да для нее можно принять, что приходит список [] снаружи6 и внутри нет списков.
-    result = '<ul>'
+    result = ['<ul>']
     for element in data:
-        result += '<li>'
+        result.append('<li>')
         for tag in get_element_tags(element):
-            result += "<{}>".format(tag) + element[tag] + "</{}>".format(tag)
-        result += '</li>'
-    result += '</ul>'
-    save_html(result)
-    return None
+            if isinstance(element[tag], list):
+                result.append("<{}>".format(tag) + do_html(element[tag]) + "</{}>".format(tag))
+            else:
+                result.append("<{}>".format(tag) + element[tag] + "</{}>".format(tag))
+        result.append('</li>')
+    result.append('</ul>')
+    return ''.join(result)
 
 
 def save_html(result: str) -> None:
@@ -33,7 +35,5 @@ def save_html(result: str) -> None:
 
 
 if __name__ == '__main__':
-    data = read_json('source3.json')
-    # print(data)
-    # print(type(data))
-    do_html(data)
+    data = read_json('source4.json')
+    save_html(do_html(data))
